@@ -1,0 +1,29 @@
+services:
+
+  nats:
+    image: nats:latest
+    container_name: nats
+    ports:
+      - "8222:8222"
+
+  client-gateway:
+    build: ./client-gateway
+    container_name: client-gateway
+    ports:
+      - ${CLIENT_GATEWAY_PORT}:${CLIENT_GATEWAY_PORT}
+    environment:
+      - PORT=${CLIENT_GATEWAY_PORT}
+      - NATS_URL=${NATS_URL}
+    volumes:
+      - ./client-gateway/src:/usr/src/app/src
+    command: npm run start:dev
+
+  products-ms:
+    build: ./products-ms
+    container_name: products-ms
+    environment:
+      - NATS_URL=${NATS_URL}
+      - DATABASE_URL=${PRODUCTS_DB_URL}
+    volumes:
+      - ./products-ms/src:/usr/src/app/src
+    command: npm run start:dev
