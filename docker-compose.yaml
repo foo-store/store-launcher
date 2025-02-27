@@ -1,5 +1,4 @@
 services:
-
   nats:
     image: nats:latest
     container_name: nats
@@ -40,3 +39,38 @@ services:
       - ./inventory-ms/src:/usr/src/app/src
     command: npm run start:dev
 
+  orders-db:
+    image: postgres:16-alpine3.21
+    container_name: orders-db
+    environment:
+      - POSTGRES_USER=${ORDERS_DB_USER}
+      - POSTGRES_PASSWORD=${ORDERS_DB_PASSWORD}
+      - POSTGRES_DB=${ORDERS_DB_NAME}
+    ports:
+      - ${ORDERS_DB_PORT}:${ORDERS_DB_PORT}
+    volumes:
+      - ./orders-ms/postgres:/var/lib/postgresql/data
+
+  orders-ms:
+    build: ./orders-ms
+    container_name: orders-ms
+    environment:
+      - NATS_URL=${NATS_URL}
+      - DATABASE_URL=${ORDERS_DB_URL}
+    volumes:
+      - ./orders-ms/src:/usr/src/app/src
+    command: npm run start:dev
+    depends_on:
+      - orders-db
+
+  auth-ms:
+    build: ./auth-ms
+    container_name: auth-ms
+    environment:
+      - NATS_URL=${NATS_URL}
+      - DATABASE_URL=${AUTH_DB_URL}
+      - JWT_SECRET=${JWT_SECRET}
+      - JWT_EXPIRES_IN=${JWT_EXPIRES_IN}
+    volumes:
+      - ./auth-ms/src:/usr/src/app/src
+    command: npm run start:dev
