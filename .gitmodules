@@ -7,3 +7,10 @@
 [submodule "inventory-ms"]
 	path = inventory-ms
 	url = https://github.com/foo-store/inventory-ms.git
+[submodule "orders-ms"]
+	path = orders-ms
+	url = https://github.com/foo-store/orders-ms.git
+
+[submodule "auth-ms"]
+	path = auth-ms
+	url = https://github.com/foo-store/auth-ms.git
