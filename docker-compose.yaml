@@ -34,7 +34,7 @@ services:
     container_name: inventory-ms
     environment:
       - NATS_URL=${NATS_URL}
-      - DATABASE_URL=${PRODUCTS_DB_URL}
+      - DATABASE_URL=${INVENTORY_DB_URL}
       - PRODUCTS_MIN_ITEMS=${PRODUCTS_MIN_ITEMS}
     volumes:
       - ./inventory-ms/src:/usr/src/app/src
