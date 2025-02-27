@@ -4,3 +4,6 @@
 [submodule "products-ms"]
 	path = products-ms
 	url = https://github.com/foo-store/products-ms.git
+[submodule "inventory-ms"]
+	path = inventory-ms
+	url = https://github.com/foo-store/inventory-ms.git
