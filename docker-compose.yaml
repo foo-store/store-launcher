@@ -97,6 +97,13 @@ services:
     container_name: payments-ms
     environment:
       - RABBITMQ_URL=${RABBITMQ_URL}
+      - NATS_URL=${NATS_URL}
+      - STRIPE_SECRET=${STRIPE_SECRET}
+      - SUCCESS_URL=${SUCCESS_URL}
+      - CANCEL_URL=${CANCEL_URL}
+      - PAYMENT_PORT=${PAYMENT_PORT}
+    ports:
+      - ${PAYMENT_PORT}:${PAYMENT_PORT}
     volumes:
       - ./payments-ms/src:/usr/src/app/src
     command: npm run start:dev
