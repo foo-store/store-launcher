@@ -14,6 +14,18 @@ services:
     volumes:
       - ./payments-ms/rabbitmq:/var/lib/rabbitmq
 
+  auth-ms:
+    build: ./auth-ms
+    container_name: auth-ms
+    environment:
+      - NATS_URL=${NATS_URL}
+      - DATABASE_URL=${AUTH_DB_URL}
+      - JWT_SECRET=${JWT_SECRET}
+      - JWT_EXPIRES_IN=${JWT_EXPIRES_IN}
+    volumes:
+      - ./auth-ms/src:/usr/src/app/src
+    command: npm run start:dev
+
   client-gateway:
     build: ./client-gateway
     container_name: client-gateway
@@ -24,17 +36,6 @@ services:
       - NATS_URL=${NATS_URL}
     volumes:
       - ./client-gateway/src:/usr/src/app/src
-    command: npm run start:dev
-
-  products-ms:
-    build: ./products-ms
-    container_name: products-ms
-    environment:
-      - NATS_URL=${NATS_URL}
-      - DATABASE_URL=${PRODUCTS_DB_URL}
-      - PRODUCTS_MIN_ITEMS=${PRODUCTS_MIN_ITEMS}
-    volumes:
-      - ./products-ms/src:/usr/src/app/src
     command: npm run start:dev
 
   inventory-ms:
@@ -80,18 +81,6 @@ services:
       orders-db:
         condition: service_healthy
 
-  auth-ms:
-    build: ./auth-ms
-    container_name: auth-ms
-    environment:
-      - NATS_URL=${NATS_URL}
-      - DATABASE_URL=${AUTH_DB_URL}
-      - JWT_SECRET=${JWT_SECRET}
-      - JWT_EXPIRES_IN=${JWT_EXPIRES_IN}
-    volumes:
-      - ./auth-ms/src:/usr/src/app/src
-    command: npm run start:dev
-
   payments-ms:
     build: ./payments-ms
     container_name: payments-ms
@@ -106,4 +95,15 @@ services:
       - ${PAYMENT_PORT}:${PAYMENT_PORT}
     volumes:
       - ./payments-ms/src:/usr/src/app/src
+    command: npm run start:dev
+
+  products-ms:
+    build: ./products-ms
+    container_name: products-ms
+    environment:
+      - NATS_URL=${NATS_URL}
+      - DATABASE_URL=${PRODUCTS_DB_URL}
+      - PRODUCTS_MIN_ITEMS=${PRODUCTS_MIN_ITEMS}
+    volumes:
+      - ./products-ms/src:/usr/src/app/src
     command: npm run start:dev
